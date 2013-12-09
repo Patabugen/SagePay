@@ -237,11 +237,15 @@ class Server extends Shared
             // SagePay V3.00 fields.
             $this->setField('VPSSignature', $post['VPSSignature']);
             $this->setField('FraudResponse', $post['FraudResponse']);
-            $this->setField('Surcharge', $post['Surcharge']);
+            if (isset($post['Surcharge'])) {
+                $this->setField('Surcharge', $post['Surcharge']);
+            }
             $this->setField('BankAuthCode', $post['BankAuthCode']);
             $this->setField('DeclineCode', $post['DeclineCode']);
             $this->setField('ExpiryDate', $post['ExpiryDate']);
-            $this->setField('Token', $post['Token']);
+            if (isset($post['Token'])) {
+                $this->setField('Token', $post['Token']);
+            }
 
             // Save the transaction record to local storage.
             // We don't want to throw exceptions here; SagePay must get its response.
