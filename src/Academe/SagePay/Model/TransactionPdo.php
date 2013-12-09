@@ -192,7 +192,7 @@ class TransactionPdo extends TransactionAbstract
                     // We will still bind to it though, for use in the WHERE clause.
                     if ($field_name == 'VendorTxCode') continue;
 
-                    $sql .= $sep . $field_name . ' = :' . strtolower($field_name);
+                    $sql .= $sep . '"'.$field_name . '" = :' . strtolower($field_name);
                     $sep = ', ';
                 }
 
