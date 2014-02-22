@@ -72,8 +72,10 @@ class Shared extends ServiceAbstract
         $refund = new self;
         $refund->setTransactionModel(clone $this->getTransactionModel());
         $refund->setField('Amount', $amount);
-
         $refund->setField('Description', $description);
+
+        $refund->setField('TxType', 'REFUND');
+        $refund->setField('Vendor', $this->getField('Vendor'));
         $refund->setField('RelatedVPSTxId', $this->getField('VPSTxId'));
         $refund->setField('RelatedVendorTxCode', $this->getField('VendorTxCode'));
         $refund->setField('RelatedSecurityKey', $this->getField('SecurityKey'));
@@ -82,6 +84,29 @@ class Shared extends ServiceAbstract
 
         // Save to generate a VendorTxCode if one hasn't been set
         $refund->save();
+
+        $query_string = $refund->queryData(true, 'shared-refund');
+
+        // Get the URL, which is derived from the method, platform and the service.
+        $sagepay_url = $refund->getUrl();
+
+        // Post the request to SagePay
+        $output = $refund->postSagePay($sagepay_url, $query_string, $refund->timeout);
+
+        if (isset($output['Status'])) {
+            // Store the result (a Status and StatusDetail field only).
+            $refund->setField('Status', $output['Status']);
+            $refund->setField('StatusDetail', $output['StatusDetail']);
+        } else {
+            // TODO: fix postSagePay() so it guarantees to return a status pair. i.e. push this whole
+            // condition back a layer.
+            $refund->setField('Status', 'FAIL');
+            $refund->setField('StatusDetail', 'Malformed return from SagePay');
+        }
+
+        // Save the result.
+        $refund->save();
+
         return $refund;
     }
 

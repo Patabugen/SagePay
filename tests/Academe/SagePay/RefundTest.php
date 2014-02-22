@@ -12,7 +12,7 @@ class RefundTest extends PHPUnit_Framework_TestCase{
 		$server = new Academe\SagePay\Server();
 		$storage = new Academe\SagePay\Model\TransactionPdo();
 		$storage->setDatabase('sqlite:memory', '', '');
-
+		$storage->createTable();
 		$server->setTransactionModel($storage);
 		$server->setPlatform('test');
 
