@@ -119,7 +119,7 @@ class Transaction
                 "min": 1,
                 "max": 40,
                 "chars": ["A", "a", "9", "{", ".", "-", "_"],
-                "source": ["server-registration", "direct-registration", "shared-release", "shared-release", "shared-abort", "shared-void", "shared-cancel"],
+                "source": ["server-registration", "direct-registration", "shared-refund", "shared-release", "shared-release", "shared-abort", "shared-void", "shared-cancel"],
                 "tamper": true,
                 "store": true,
                 "notes": "Primary key of each transaction"
@@ -130,10 +130,41 @@ class Transaction
                 "min": 1,
                 "max": 40,
                 "chars": ["A", "a", "9", "{", ".", "-", "_"],
-                "source": ["shared-release", "shared-abort", "shared-void", "shared-cancel"],
+                "source": ["shared-release", "shared-refund", "shared-abort", "shared-void", "shared-cancel"],
                 "tamper": false,
                 "store": true,
                 "notes": "Points to an original transaction"
+            },
+            "RelatedVPSTxId": {
+                "required": false,
+                "type": "string",
+                "min": 38,
+                "max": 38,
+                "source": ["shared-refund"],
+                "tamper": true,
+                "store": true,
+                "notes" : "VPSTxId from the original transaction"
+            },
+            "RelatedSecurityKey": {
+                "required": false,
+                "type": "string",
+                "min": 10,
+                "max": 10,
+                "source": ["shared-refund"],
+                "tamper": true,
+                "store": true,
+                "notes" : "Security Key from the original transaction"
+            },
+            "RelatedTxAuthNo": {
+                "required": false,
+                "type": "string",
+                "chars": ["9"],
+                "min": 1,
+                "max": 50,
+                "source": ["shared-refund"],
+                "tamper": true,
+                "store": true,
+                "notes" : "TxAuthNo from the original transaction"
             },
             "VPSProtocol": {
                 "required": true,
@@ -141,7 +172,7 @@ class Transaction
                 "min": 4,
                 "max": 4,
                 "default": "3.00",
-                "source": ["server-registration", "direct-registration", "direct-paypal-response", "direct-paypal-callback", "paypal-complete", "shared-release", "shared-release-response", "shared-abort", "shared-abort-response", "shared-void", "shared-void-response", "shared-cancel", "shared-cancel-response"],
+                "source": ["server-registration", "direct-registration", "direct-paypal-response", "direct-paypal-callback", "paypal-complete", "shared-refund", "shared-release", "shared-release-response", "shared-abort", "shared-abort-response", "shared-void", "shared-void-response", "shared-cancel", "shared-cancel-response"],
                 "store": true
             },
             "TxType": {
@@ -151,7 +182,7 @@ class Transaction
                 "min": 1,
                 "max": 15,
                 "default": "PAYMENT",
-                "source": ["server-registration", "direct-registration", "paypal-complete", "shared-release", "shared-abort", "shared-void", "shared-cancel"],
+                "source": ["server-registration", "direct-registration", "paypal-complete", "shared-refund", "shared-release", "shared-abort", "shared-void", "shared-cancel"],
                 "store": true
             },
             "Vendor": {
@@ -160,7 +191,7 @@ class Transaction
                 "min": 1,
                 "max": 15,
                 "chars": ["A", "a", "9"],
-                "source": ["server-registration", "direct-registration", "shared-release", "shared-abort", "shared-void", "shared-cancel"],
+                "source": ["server-registration", "direct-registration", "shared-refund", "shared-release", "shared-abort", "shared-void", "shared-cancel"],
                 "tamper": true,
                 "store": true
             },
@@ -170,7 +201,7 @@ class Transaction
                 "min": 0.01,
                 "max": 100000,
                 "chars": ["9", ",", "."],
-                "source": ["server-registration", "direct-registration", "paypal-complete"],
+                "source": ["server-registration", "direct-registration", "shared-refund", "paypal-complete"],
                 "default": "0",
                 "store": true
             },
@@ -190,7 +221,7 @@ class Transaction
                 "type": "iso4217",
                 "min": 3,
                 "max": 3,
-                "source": ["server-registration", "direct-registration"],
+                "source": ["server-registration", "direct-registration", "shared-refund"],
                 "default": "GBP",
                 "store": true
             },
@@ -199,7 +230,7 @@ class Transaction
                 "min": 1,
                 "max": 100,
                 "type": "html",
-                "source": ["server-registration", "direct-registration"],
+                "source": ["server-registration", "direct-registration", "shared-refund"],
                 "store": true
             },
             "NotificationURL": {

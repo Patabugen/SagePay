@@ -63,6 +63,29 @@ class Shared extends ServiceAbstract
     }
 
     /**
+     * Refund a transaction.
+     * @return Shared Returns a new Server object
+     */
+
+    public function refund($amount, $description)
+    {
+        $refund = new self;
+        $refund->setTransactionModel(clone $this->getTransactionModel());
+        $refund->setField('Amount', $amount);
+
+        $refund->setField('Description', $description);
+        $refund->setField('RelatedVPSTxId', $this->getField('VPSTxId'));
+        $refund->setField('RelatedVendorTxCode', $this->getField('VendorTxCode'));
+        $refund->setField('RelatedSecurityKey', $this->getField('SecurityKey'));
+        $refund->setField('RelatedTxAuthNo', $this->getField('TxAuthNo'));
+        $refund->setField('Currency', $this->getField('Currency'));
+
+        // Save to generate a VendorTxCode if one hasn't been set
+        $refund->save();
+        return $refund;
+    }
+
+    /**
      * Abort, release or void a DEFERRED or REPEATDEFERRED payment.
      */
 
