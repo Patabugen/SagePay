@@ -79,7 +79,7 @@ class TransactionPdo extends TransactionAbstract
      * Get the database table name.
      */
 
-    public function getTablename($tablename)
+    public function getTablename()
     {
         return $this->transaction_table_name;
     }
