@@ -1,6 +1,6 @@
 <?php
 
-require 'C:\wamp\www\acacia\secure_test\vendor\autoload.php';
+require 'vendor/autoload.php';
 
 use Academe\SagePay;
 
