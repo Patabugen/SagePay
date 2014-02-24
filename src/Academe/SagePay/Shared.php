@@ -63,51 +63,38 @@ class Shared extends ServiceAbstract
     }
 
     /**
-     * Refund a transaction.
+     * Submits the refund to SagePay
      * @return Shared Returns a new Server object
      */
 
-    public function refund($amount, $description)
+    public function refund()
     {
-        $refund = new self;
-        $refund->setTransactionModel(clone $this->getTransactionModel());
-        $refund->setField('Amount', $amount);
-        $refund->setField('Description', $description);
-
-        $refund->setField('TxType', 'REFUND');
-        $refund->setField('Vendor', $this->getField('Vendor'));
-        $refund->setField('RelatedVPSTxId', $this->getField('VPSTxId'));
-        $refund->setField('RelatedVendorTxCode', $this->getField('VendorTxCode'));
-        $refund->setField('RelatedSecurityKey', $this->getField('SecurityKey'));
-        $refund->setField('RelatedTxAuthNo', $this->getField('TxAuthNo'));
-        $refund->setField('Currency', $this->getField('Currency'));
-
         // Save to generate a VendorTxCode if one hasn't been set
-        $refund->save();
+        $this->save();
 
-        $query_string = $refund->queryData(true, 'shared-refund');
+        $query_string = $this->queryData(true, 'shared-refund');
 
         // Get the URL, which is derived from the method, platform and the service.
-        $sagepay_url = $refund->getUrl();
+        $sagepay_url = $this->getUrl();
 
         // Post the request to SagePay
-        $output = $refund->postSagePay($sagepay_url, $query_string, $refund->timeout);
+        $output = $this->postSagePay($sagepay_url, $query_string, $this->timeout);
 
         if (isset($output['Status'])) {
             // Store the result (a Status and StatusDetail field only).
-            $refund->setField('Status', $output['Status']);
-            $refund->setField('StatusDetail', $output['StatusDetail']);
+            $this->setField('Status', $output['Status']);
+            $this->setField('StatusDetail', $output['StatusDetail']);
         } else {
             // TODO: fix postSagePay() so it guarantees to return a status pair. i.e. push this whole
             // condition back a layer.
-            $refund->setField('Status', 'FAIL');
-            $refund->setField('StatusDetail', 'Malformed return from SagePay');
+            $this->setField('Status', 'FAIL');
+            $this->setField('StatusDetail', 'Malformed return from SagePay');
         }
 
         // Save the result.
-        $refund->save();
+        $this->save();
 
-        return $refund;
+        return ($this->getField('Status') == 'OK');
     }
 
     /**
@@ -195,7 +182,11 @@ class Shared extends ServiceAbstract
             $this->setField('StatusDetail', $output['StatusDetail']);
         } else {
             // TODO: fix postSagePay() so it guarantees to return a status pair. i.e. push this whole
+<<<<<<< HEAD
+            // condition back a layer.f
+=======
             // condition back a layer.
+>>>>>>> sami_Dev
             $this->setField('Status', 'FAIL');
             $this->setField('StatusDetail', 'Malformed return from SagePay');
         }

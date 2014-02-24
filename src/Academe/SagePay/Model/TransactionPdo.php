@@ -300,6 +300,15 @@ class TransactionPdo extends TransactionAbstract
 
         $up_migrations = array();
 
+<<<<<<< HEAD
+        // Lets just go crazy and attempt to add every column, this means we can just update
+        // the Transactions MetaData and then run this.
+        $columnDls = explode(',', $this->createColumnsDdl());
+        foreach ($columnDls as $columnDl) {
+            // Add RelatedSecurityKey column.
+            $up_migrations[] = "ALTER TABLE $transaction_table ADD COLUMN ".$columnDl;
+        }
+=======
         // Issue #9 rename a column.
         $up_migrations[] = "ALTER TABLE $transaction_table CHANGE COLUMN OriginalVendorTxCode"
             . " RelatedVendorTxCode varchar(40) DEFAULT NULL";
@@ -311,6 +320,7 @@ class TransactionPdo extends TransactionAbstract
         // Issue #9 add RelatedSecurityKey column.
         $up_migrations[] = "ALTER TABLE $transaction_table ADD COLUMN RelatedSecurityKey"
             . " varchar(10) DEFAULT NULL";
+>>>>>>> sami_Dev
 
         // Assume success.
         $final_result = true;
@@ -323,7 +333,11 @@ class TransactionPdo extends TransactionAbstract
             catch (\PDOException $e) {
                 // Record the error, but otherwise continue.
                 $final_result = false;
+<<<<<<< HEAD
+                $pdo_error_messages[] = $e->getMessage() . ': ' .$up_migration;
+=======
                 $pdo_error_messages[] = $e->getMessage();
+>>>>>>> sami_Dev
             }
         }
 
@@ -462,7 +476,11 @@ class TransactionPdo extends TransactionAbstract
      * the transaction, then save it again, so there are two for each use at least.
      */
 
+<<<<<<< HEAD
+    public function getConnection()
+=======
     protected function getConnection()
+>>>>>>> sami_Dev
     {
         if (!isset($this->pdo)) {
             // Connect to the database.

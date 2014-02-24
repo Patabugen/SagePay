@@ -528,6 +528,25 @@ class ServiceAbstract //extends Model\XmlAbstract
         return $this->tx_model->find($VendorTxCode);
     }
 
+    public function createRefund($VendorTxCode, $amount, $description) {
+        $original = new self;
+        $original->setTransactionModel(clone $this->getTransactionModel());
+        $original->findTransaction($VendorTxCode);
+
+        $this->setField('Amount', $amount);
+        $this->setField('Description', $description);
+
+        $this->setField('TxType', 'REFUND');
+        $this->setField('Vendor', $original->getField('Vendor'));
+        $this->setField('RelatedVPSTxId', $original->getField('VPSTxId'));
+        $this->setField('RelatedVendorTxCode', $original->getField('VendorTxCode'));
+        $this->setField('RelatedSecurityKey', $original->getField('SecurityKey'));
+        $this->setField('RelatedTxAuthNo', $original->getField('TxAuthNo'));
+        $this->setField('Currency', $original->getField('Currency'));
+
+        return true;
+    }
+
     /**
      * Set the billing address.
      */
