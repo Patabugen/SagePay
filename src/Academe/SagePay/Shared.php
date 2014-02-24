@@ -182,11 +182,7 @@ class Shared extends ServiceAbstract
             $this->setField('StatusDetail', $output['StatusDetail']);
         } else {
             // TODO: fix postSagePay() so it guarantees to return a status pair. i.e. push this whole
-<<<<<<< HEAD
-            // condition back a layer.f
-=======
             // condition back a layer.
->>>>>>> sami_Dev
             $this->setField('Status', 'FAIL');
             $this->setField('StatusDetail', 'Malformed return from SagePay');
         }

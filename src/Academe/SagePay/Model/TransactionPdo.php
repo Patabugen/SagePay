@@ -300,7 +300,6 @@ class TransactionPdo extends TransactionAbstract
 
         $up_migrations = array();
 
-<<<<<<< HEAD
         // Lets just go crazy and attempt to add every column, this means we can just update
         // the Transactions MetaData and then run this.
         $columnDls = explode(',', $this->createColumnsDdl());
@@ -308,19 +307,6 @@ class TransactionPdo extends TransactionAbstract
             // Add RelatedSecurityKey column.
             $up_migrations[] = "ALTER TABLE $transaction_table ADD COLUMN ".$columnDl;
         }
-=======
-        // Issue #9 rename a column.
-        $up_migrations[] = "ALTER TABLE $transaction_table CHANGE COLUMN OriginalVendorTxCode"
-            . " RelatedVendorTxCode varchar(40) DEFAULT NULL";
-
-        // Issue #9 add RelatedVPSTxId column.
-        $up_migrations[] = "ALTER TABLE $transaction_table ADD COLUMN RelatedVPSTxId"
-            . " varchar(38) DEFAULT NULL";
-
-        // Issue #9 add RelatedSecurityKey column.
-        $up_migrations[] = "ALTER TABLE $transaction_table ADD COLUMN RelatedSecurityKey"
-            . " varchar(10) DEFAULT NULL";
->>>>>>> sami_Dev
 
         // Assume success.
         $final_result = true;
@@ -333,11 +319,7 @@ class TransactionPdo extends TransactionAbstract
             catch (\PDOException $e) {
                 // Record the error, but otherwise continue.
                 $final_result = false;
-<<<<<<< HEAD
                 $pdo_error_messages[] = $e->getMessage() . ': ' .$up_migration;
-=======
-                $pdo_error_messages[] = $e->getMessage();
->>>>>>> sami_Dev
             }
         }
 
@@ -469,18 +451,10 @@ class TransactionPdo extends TransactionAbstract
     }
 
     /**
-     * Get a database connection.
-     * Not handled as a singleton, even though that would most likely be how it is used.
-     * Just put your own singleton wrapper around this if you prefer that.
-     * TODO: what the hell, let's make this a singleton. We need a connection to read
-     * the transaction, then save it again, so there are two for each use at least.
+     * Get the PDO database connection singleton
      */
 
-<<<<<<< HEAD
     public function getConnection()
-=======
-    protected function getConnection()
->>>>>>> sami_Dev
     {
         if (!isset($this->pdo)) {
             // Connect to the database.
